@@ -137,7 +137,7 @@ PVOID get_function_address(HMODULE hLibrary, DWORD fhash, WORD ordinal)
 	if (!addr)
 		return NULL;
 
-	if (addr >= (PVOID)exp && addr < (PDWORD_PTR)exp + exp_size)
+	if (addr >= (PVOID)exp && addr < (PCHAR)exp + exp_size)
 		addr = resolve_reference(hLibrary, addr);
 
 	return addr;
