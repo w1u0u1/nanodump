@@ -5,8 +5,8 @@ This project based on [nanodump](https://github.com/helpsystems/nanodump), big t
 vs2019 + cpp
 
 # usage(64-bit only)
-nanodump --write c:\windows\temp\nano.dmp  
-load_ssp c:\windows\temp\nanodump_ssp.dll
+nanodump --write c:\windows\temp\nano.dmp
+![Screenshot](Capture1.png)
 
-# win11 ok
-![Screenshot](Capture.png)
+load_ssp c:\windows\temp\nanodump_ssp.dll
+![Screenshot](Capture2.png)
