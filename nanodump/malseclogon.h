@@ -8,7 +8,7 @@
 #define MAX_HANDLES 10000
 #define INVALID_HANDLE 6
 
-#define CreateProcessWithLogonW_SW2_HASH 0x089c201c
+#define CreateProcessWithLogonW_SW2_HASH 0x9d4c9319
 
 typedef struct _HANDLE_LIST
 {

@@ -1,6 +1,5 @@
 #pragma once
 #include <windows.h>
-#include <winternl.h>
 #include <stdio.h>
 #include <time.h>
 #include "common.h"

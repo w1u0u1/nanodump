@@ -1,6 +1,5 @@
 #pragma once
 #include "syscalls.h"
-#include "common.h"
 
 
 #if defined(NANO) && !defined(SSP)

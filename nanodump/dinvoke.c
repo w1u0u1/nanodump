@@ -3,20 +3,7 @@
 
 typedef NTSTATUS(WINAPI* LdrLoadDll_t)(PWCHAR, ULONG, PUNICODE_STRING, PHANDLE);
 
-//DWORD SW2_HashSyscall(PCSTR FunctionName);
-//DWORD SW2_HashSyscall(PCSTR FunctionName)
-//{
-//	DWORD i = 0;
-//	DWORD Hash = SW2_SEED;
-//
-//	while (FunctionName[i])
-//	{
-//		WORD PartialName = *(WORD*)((ULONG64)FunctionName + i++);
-//		Hash ^= PartialName + SW2_ROR8(Hash);
-//	}
-//
-//	return Hash;
-//}
+DWORD SW2_HashSyscall(PCSTR FunctionName);
 
 BOOL is_dll(HMODULE hLibrary)
 {
@@ -103,8 +90,12 @@ PVOID get_function_address(HMODULE hLibrary, DWORD fhash, WORD ordinal)
 	LPCSTR                  api;
 	PVOID                   addr;
 
+	printf("get_function_address 1\n");
+
 	if (!is_dll(hLibrary))
 		return NULL;
+
+	printf("get_function_address 2\n");
 
 	dos = (PIMAGE_DOS_HEADER)hLibrary;
 	nt = RVA(PIMAGE_NT_HEADERS, hLibrary, dos->e_lfanew);
@@ -112,6 +103,8 @@ PVOID get_function_address(HMODULE hLibrary, DWORD fhash, WORD ordinal)
 
 	if (!data->Size || !data->VirtualAddress)
 		return NULL;
+
+	printf("get_function_address 3\n");
 
 	exp = RVA(PIMAGE_EXPORT_DIRECTORY, hLibrary, data->VirtualAddress);
 	exp_size = data[IMAGE_DIRECTORY_ENTRY_EXPORT].Size;
@@ -140,8 +133,12 @@ PVOID get_function_address(HMODULE hLibrary, DWORD fhash, WORD ordinal)
 	if (!addr)
 		return NULL;
 
+	printf("get_function_address 4\n");
+
 	if (addr >= (PVOID)exp && addr < (PCHAR)exp + exp_size)
 		addr = resolve_reference(hLibrary, addr);
+
+	printf("get_function_address 5\n");
 
 	return addr;
 }
@@ -168,6 +165,8 @@ HANDLE get_library_address(LPWSTR LibName, BOOL DoLoad)
 	if (!LdrLoadDll)
 		return NULL;
 
+	printf("get_library_address 1\n");
+
 	UNICODE_STRING ModuleFileName;
 	ModuleFileName.Buffer = LibName;
 	ModuleFileName.Length = wcsnlen(ModuleFileName.Buffer, MAX_PATH);
@@ -178,6 +177,8 @@ HANDLE get_library_address(LPWSTR LibName, BOOL DoLoad)
 	NTSTATUS status = LdrLoadDll(NULL, 0, &ModuleFileName, &hLibrary);
 	if (!NT_SUCCESS(status))
 		return NULL;
+
+	printf("get_library_address 2\n");
 
 	return hLibrary;
 }

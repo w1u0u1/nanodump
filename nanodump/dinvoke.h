@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include "common.h"
 
 #ifdef _WIN64
 #define PEB_OFFSET 0x60
@@ -12,21 +12,12 @@
 #define NT_SUCCESS(Status) ((NTSTATUS)(Status) >= 0)
 
 #define NTDLL_DLL L"ntdll.dll"
-#define LdrLoadDll_SW2_HASH 0xe09c9989
+#define LdrLoadDll_SW2_HASH 0x6419a5ac
 
 #define MZ 0x5A4D
 
-#define SW2_SEED 0xE0AD95A4
-#define SW2_ROR8(v) (v >> 8 | v << 24)
 
 typedef HMODULE(WINAPI* LOADLIBRARYA)(LPCSTR);
-
-typedef struct _UNICODE_STRING
-{
-    USHORT Length;
-    USHORT MaximumLength;
-    PWSTR  Buffer;
-} UNICODE_STRING, * PUNICODE_STRING;
 
 typedef struct _ND_LDR_DATA_TABLE_ENTRY
 {

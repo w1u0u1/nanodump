@@ -8,7 +8,7 @@
 
 #include "common.h"
 
-#define SW2_SEED 0xE0AD95A4
+#define SW2_SEED 0x4BE2A6AA
 #define SW2_ROL8(v) (v << 8 | v >> 24)
 #define SW2_ROR8(v) (v >> 8 | v << 24)
 #define SW2_ROX8(v) ((SW2_SEED % 2) ? SW2_ROL8(v) : SW2_ROR8(v))
@@ -50,52 +50,6 @@ typedef struct _SW2_PEB {
 	PSW2_PEB_LDR_DATA Ldr;
 } SW2_PEB, *PSW2_PEB;
 
-DWORD SW2_HashSyscall(PCSTR FunctionName);
-BOOL SW2_PopulateSyscallList(void);
-EXTERN_C DWORD SW2_GetSyscallNumber(DWORD FunctionHash);
-
-
-
-//typedef struct _IO_STATUS_BLOCK
-//{
-//	union
-//	{
-//		NTSTATUS Status;
-//		VOID*    Pointer;
-//	};
-//	ULONG_PTR Information;
-//} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
-
-
-
-//typedef struct _UNICODE_STRING
-//{
-//	USHORT Length;
-//	USHORT MaximumLength;
-//	PWSTR  Buffer;
-//} UNICODE_STRING, *PUNICODE_STRING;
-
-#ifndef InitializeObjectAttributes
-#define InitializeObjectAttributes( p, n, a, r, s ) { \
-	(p)->Length = sizeof( OBJECT_ATTRIBUTES );        \
-	(p)->RootDirectory = r;                           \
-	(p)->Attributes = a;                              \
-	(p)->ObjectName = n;                              \
-	(p)->SecurityDescriptor = s;                      \
-	(p)->SecurityQualityOfService = NULL;             \
-}
-#endif
-
-//typedef struct _OBJECT_ATTRIBUTES
-//{
-//	ULONG           Length;
-//	HANDLE          RootDirectory;
-//	PUNICODE_STRING ObjectName;
-//	ULONG           Attributes;
-//	PVOID           SecurityDescriptor;
-//	PVOID           SecurityQualityOfService;
-//} OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
-
 typedef enum _MEMORY_INFORMATION_CLASS
 {
 	MemoryBasicInformation,
@@ -111,50 +65,50 @@ typedef enum _MEMORY_INFORMATION_CLASS
 	MemoryBasicInformationCapped
 } MEMORY_INFORMATION_CLASS, *PMEMORY_INFORMATION_CLASS;
 
-//typedef struct _CLIENT_ID
-//{
-//	HANDLE UniqueProcess;
-//	HANDLE UniqueThread;
-//} CLIENT_ID, *PCLIENT_ID;
+typedef enum _SYSTEM_INFORMATION_CLASS
+{
+	SystemBasicInformation = 0,
+	SystemPerformanceInformation = 2,
+	SystemTimeOfDayInformation = 3,
+	SystemProcessInformation = 5,
+	SystemProcessorPerformanceInformation = 8,
+	SystemHandleInformation = 16,
+	SystemInterruptInformation = 23,
+	SystemExceptionInformation = 33,
+	SystemRegistryQuotaInformation = 37,
+	SystemLookasideInformation = 45,
+	SystemCodeIntegrityInformation = 103,
+	SystemPolicyInformation = 134,
+} SYSTEM_INFORMATION_CLASS, *PSYSTEM_INFORMATION_CLASS;
 
-//typedef enum _SYSTEM_INFORMATION_CLASS
-//{
-//	SystemBasicInformation = 0,
-//	SystemPerformanceInformation = 2,
-//	SystemTimeOfDayInformation = 3,
-//	SystemProcessInformation = 5,
-//	SystemProcessorPerformanceInformation = 8,
-//	SystemHandleInformation = 16,
-//	SystemInterruptInformation = 23,
-//	SystemExceptionInformation = 33,
-//	SystemRegistryQuotaInformation = 37,
-//	SystemLookasideInformation = 45,
-//	SystemCodeIntegrityInformation = 103,
-//	SystemPolicyInformation = 134,
-//} SYSTEM_INFORMATION_CLASS, *PSYSTEM_INFORMATION_CLASS;
-
-//typedef enum _PROCESSINFOCLASS
-//{
-//	ProcessBasicInformation = 0,
-//	ProcessDebugPort = 7,
-//	ProcessWow64Information = 26,
-//	ProcessImageFileName = 27,
-//	ProcessBreakOnTermination = 29
-//} PROCESSINFOCLASS, *PPROCESSINFOCLASS;
+typedef enum _PROCESSINFOCLASS
+{
+	ProcessBasicInformation = 0,
+	ProcessDebugPort = 7,
+	ProcessWow64Information = 26,
+	ProcessImageFileName = 27,
+	ProcessBreakOnTermination = 29
+} PROCESSINFOCLASS, *PPROCESSINFOCLASS;
 
 typedef VOID(NTAPI* PIO_APC_ROUTINE) (
 	IN PVOID            ApcContext,
 	IN PIO_STATUS_BLOCK IoStatusBlock,
 	IN ULONG            Reserved);
 
-//typedef enum _OBJECT_INFORMATION_CLASS
-//{
-//	ObjectBasicInformation,
-//	ObjectNameInformation,
-//	ObjectTypeInformation,
-//	ObjectAllTypesInformation,
-//	ObjectHandleInformation
-//} OBJECT_INFORMATION_CLASS, *POBJECT_INFORMATION_CLASS;
+typedef enum _OBJECT_INFORMATION_CLASS
+{
+	ObjectBasicInformation,
+	ObjectNameInformation,
+	ObjectTypeInformation,
+	ObjectAllTypesInformation,
+	ObjectHandleInformation
+} OBJECT_INFORMATION_CLASS, *POBJECT_INFORMATION_CLASS;
+
+typedef struct _CLIENT_ID
+{
+	HANDLE UniqueProcess;
+	HANDLE UniqueThread;
+} CLIENT_ID, * PCLIENT_ID;
 
 EXTERN_C NTSTATUS NtOpenProcess(
 	OUT PHANDLE ProcessHandle,
@@ -288,5 +242,9 @@ EXTERN_C NTSTATUS NtDeleteFile(
 EXTERN_C NTSTATUS NtTerminateProcess(
 	IN HANDLE ProcessHandle OPTIONAL,
 	IN NTSTATUS ExitStatus);
+
+DWORD SW2_HashSyscall(PCSTR FunctionName);
+BOOL SW2_PopulateSyscallList(void);
+EXTERN_C DWORD SW2_GetSyscallNumber(DWORD FunctionHash);
 
 #endif
