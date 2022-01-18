@@ -579,19 +579,12 @@ PMiniDumpMemoryDescriptor64 write_memory64_list_stream(Pdump_context dc, Pmodule
 
 BOOL NanoDumpWriteDump(Pdump_context dc)
 {
-	DPRINT("write_header");
-
 	if (!write_header(dc))
-	{
-		DPRINT("write_header false");
 		return FALSE;
-	}
 
-	DPRINT("write_directories");
 	if (!write_directories(dc))
 		return FALSE;
 
-	DPRINT("write_system_info_stream");
 	if (!write_system_info_stream(dc))
 		return FALSE;
 
