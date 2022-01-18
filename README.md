@@ -4,7 +4,7 @@ This project based on [nanodump](https://github.com/helpsystems/nanodump), big t
 # basic
 vs2019 + cpp
 
-# usage(64-bit only)
+# usage(x86&x64)
 nanodump --write c:\windows\temp\nano.dmp
 ![Screenshot](Capture1.png)
 
