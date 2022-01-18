@@ -21,19 +21,19 @@
     <ClCompile Include="nanodump.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dinvoke.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="handle.c">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="malseclogon.c">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="modules.c">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="syscalls.c">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dinvoke.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -57,7 +57,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dinvoke.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
