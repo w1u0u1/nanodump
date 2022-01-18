@@ -26,8 +26,5 @@
     <ClInclude Include="dinvoke.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="syscalls.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
